@@ -1,11 +1,13 @@
 import Proptypes from 'prop-types';
 import React from 'react';
 
-const CustomButton = ({ children }) => (
-	<button className="custom-button" type="button">
-		{children}
-	</button>
-);
+const CustomButton = ({ children, onClick }) => {
+	return (
+		<button className="custom-button" type="button" onClick={onClick}>
+			{children}
+		</button>
+	);
+};
 
 CustomButton.defaultProps = {
 	children: String
@@ -17,7 +19,8 @@ CustomButton.propTypes = {
 	 * Proptypes.oneOfType([Proptypes.arrayOf(Proptypes.node), Proptypes.node])
 	 * Here we're just taking in a string
 	 */
-	children: Proptypes.string
+	children: Proptypes.string,
+	onClick: Proptypes.func
 };
 
 export default CustomButton;

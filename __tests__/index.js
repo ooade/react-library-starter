@@ -1,34 +1,22 @@
 import React from 'react';
-import { configure, shallow, mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { cleanup, render, fireEvent } from 'react-testing-library';
 import CustomButton from '../src';
 
-configure({ adapter: new Adapter() });
-
 describe('Library', () => {
+	afterEach(cleanup);
+
 	it('should render properly', () => {
-		const wrapper = shallow(<CustomButton>Hello World</CustomButton>);
-		expect(wrapper).toMatchSnapshot();
+		const { getByText } = render(<CustomButton>Hello World</CustomButton>);
+		expect(getByText(/Hello World/i)).toBeTruthy();
 	});
 
-	it('should match the element specified', () => {
-		const actual = shallow(<CustomButton>Hello World</CustomButton>);
-		const expected = (
-			<button className="custom-button" type="button">
-				Hello World
-			</button>
+	it('should button should be clickable when passed an onClick handler', () => {
+		const fakeHandleClick = jest.fn();
+		const { getByText } = render(
+			<CustomButton onClick={fakeHandleClick}>Hello World</CustomButton>
 		);
-		expect(actual).toMatchElement(expected);
-	});
 
-	it('[Not necessary, just an example] should have className custom-button', () => {
-		const wrapper = mount(<CustomButton>Hello World</CustomButton>);
-		const shallowWrapper = shallow(<CustomButton>Hello World</CustomButton>);
-
-		// mount?
-		expect(wrapper.find('button')).toHaveClassName('custom-button');
-
-		// or a simple shallow???
-		expect(shallowWrapper).toHaveClassName('custom-button');
+		fireEvent.click(getByText(/Hello World/i));
+		expect(fakeHandleClick).toBeCalledTimes(1);
 	});
 });
